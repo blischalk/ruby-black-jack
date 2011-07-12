@@ -1,0 +1,87 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXFileReference section */
+		C879879413C9E4FE00793579 /* main.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; path = main.rb; sourceTree = "<group>"; };
+		C879879813C9E51000793579 /* BlackJack.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; path = BlackJack.rb; sourceTree = "<group>"; };
+		C879879913C9E51000793579 /* Dealer.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; path = Dealer.rb; sourceTree = "<group>"; };
+		C879879A13C9E51000793579 /* Deck.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; path = Deck.rb; sourceTree = "<group>"; };
+		C879879B13C9E51000793579 /* Display.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; path = Display.rb; sourceTree = "<group>"; };
+		C879879C13C9E51000793579 /* Helper.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; path = Helper.rb; sourceTree = "<group>"; };
+		C879879D13C9E51000793579 /* Player.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; path = Player.rb; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		C879877113C9E3F200793579 = {
+			isa = PBXGroup;
+			children = (
+				C879879413C9E4FE00793579 /* main.rb */,
+				C879879613C9E51000793579 /* classes */,
+			);
+			sourceTree = "<group>";
+		};
+		C879879613C9E51000793579 /* classes */ = {
+			isa = PBXGroup;
+			children = (
+				C879879813C9E51000793579 /* BlackJack.rb */,
+				C879879913C9E51000793579 /* Dealer.rb */,
+				C879879A13C9E51000793579 /* Deck.rb */,
+				C879879B13C9E51000793579 /* Display.rb */,
+				C879879C13C9E51000793579 /* Helper.rb */,
+				C879879D13C9E51000793579 /* Player.rb */,
+			);
+			path = classes;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXProject section */
+		C879877313C9E3F200793579 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = C879877613C9E3F200793579 /* Build configuration list for PBXProject "blackjack" */;
+			compatibilityVersion = "Xcode 2.4";
+			hasScannedForEncodings = 0;
+			mainGroup = C879877113C9E3F200793579;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		C879877413C9E3F200793579 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Debug;
+		};
+		C879877513C9E3F200793579 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C879877613C9E3F200793579 /* Build configuration list for PBXProject "blackjack" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C879877413C9E3F200793579 /* Debug */,
+				C879877513C9E3F200793579 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C879877313C9E3F200793579 /* Project object */;
+}
