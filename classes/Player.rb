@@ -1,28 +1,24 @@
 class Player
-  attr_accessor :name, :pos, :hand
+  attr_accessor :name, :pos, :hand, :status
   def initialize
     @name = self.set_name
-    @hand = {:cards => [], :value => 0}
+    @hand = Hand.new
     @pos = self.set_pos
+    @status = true
     self.setup
   end
 
   def setup
   end
 
-  def display_hand
-    str = @hand[:cards].join(" ")
-    str += " (#{@hand[:value]})"
-    return str
-  end
-
 end
 
 class ActivePlayer < Player
-  attr_accessor :bet, :cash
+  attr_accessor :bet, :cash, :action
   def initialize
     @cash = 100
     @bet = 0
+    @action = nil
     super()
   end
 
@@ -35,10 +31,12 @@ end
 
 class Human < ActivePlayer
   def set_name
+=begin
       puts "Please enter your name..."
       name = gets.chomp
       puts "Thank you #{name}."  
-      return name
+=end
+      return 'Brett' #name
   end
   def set_pos
     return 1

@@ -1,27 +1,42 @@
 class BlackJack
-  attr_accessor :player
-  attr_reader :dealer, :bots, :player, :players
+  attr_accessor :players, :player, :dealer, :bots
   def initialize
-    greeting
-    get_status
-    setup @game
+    greeting #Verified
+    # 1 for new game
+    # 2 for continued game
+    # verified
+    status = get_status
+    # pass the status into our setup function
+    setup status #verified
     run
   end
 
-  def setup(game)
-    if game == 1
+  def run
+    @dealer.get_ante
+    @dealer.deal
+    @display = Display.new(@players)
+    @dealer.prompt_action
+    @dealer.fallout
+    @display.draw
+  end
+
+  def setup(status)
+    if status == 1
       @players = self.get_players
+      @dealer.players = @players
       else
     end
   end
 
-  def run
-    @dealer.deal @players
-    puts "Place your bets!"
-    @players.each do |p|
-      p.place_bet
+
+  def get_bots
+    bots = Array.new()
+    count = 0
+    while count < 2
+      bots << Bot.new
+      count += 1
     end
-    @display = Display.new(@players)
+    return bots
   end
 
   def get_players
@@ -38,10 +53,6 @@ class BlackJack
     return ret
   end
 
-  def greeting
-    puts "Welcome to Brett's Blackjack"
-  end
-
   def get_status
     valid = false
     puts "1) New Game \n2) Continue"
@@ -49,26 +60,21 @@ class BlackJack
     action = gets.chomp.to_i
       case action
         when 1
-          @game = 1
+          ret = 1
           valid = true
         when 2
           puts "Continuing a previous game"
-          @game = 2
+          ret = 2
           valid = true
         else
           puts "Please select either 1 or 2"
       end
+      return ret
     end
   end
 
-  def get_bots
-    bots = Array.new()
-    count = 0
-    while count < 2
-      bots << Bot.new
-      count += 1
-    end
-    return bots
+  def greeting
+    puts "Welcome to Brett's Blackjack"
   end
 end
 

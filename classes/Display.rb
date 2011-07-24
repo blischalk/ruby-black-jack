@@ -1,15 +1,19 @@
 class Display
+  attr_accessor :players
   def initialize(players)
-    self.draw players
+    @players = players
+    self.draw
   end
 
-  def draw(players)
+  def draw
+    #create an array of player properties
     properties = %w{pos name hand cash bet}
     count = properties.count
+    #create a hash of information used in displaying data
     vals = {:lengths => {}, :totals => [], :count => count}
     # Iterate once to populate our hash
     properties.each do |n|
-      vals[:lengths][n.to_sym] = get_len(players, n)
+      vals[:lengths][n.to_sym] = get_len(n)
       arr = vals[:lengths][n.to_sym]
       vals[:totals] << arr.inject(0) { |sum, value| sum + value }
     end
@@ -41,19 +45,12 @@ class Display
     puts divider
     puts h_row
     puts divider
-    players.each do |p|
+    @players.each do |p|
       p_row = "|"
       properties.each do |n|
         prop = 0
-        begin
-          if n == 'hand'
-            str = p.send(:display_hand)
-          else
-            str = p.send(n.to_sym).to_s
-          end
-        rescue
-          str = 'X'
-        end
+        
+        str = DisplayParser.parse(p, n)
         spaces = 1
         max = vals[:lengths][n.to_sym].max
         h_len = n.to_s.length
@@ -71,7 +68,7 @@ class Display
         p_row += " " * r_margin
         if prop < properties.count
           p_row += "|"
-        end
+        end  
         prop += 1
       end
       puts p_row
@@ -79,19 +76,31 @@ class Display
     puts divider
   end
 
-  def get_len(players, property)
+  
+
+  #possible case for polymorphism
+  def get_len(prop)
     arr = []
-    players.each do |p|
-      begin
-        if property == 'hand'
-          s = p.send(:display_hand)
+    @players.each do |p|
+      if p.status == true
+        if prop == 'hand'
+          s = p.send(prop).hand
           l = s.length
         else 
-          l = p.send(property.to_sym).to_s.length
+          begin
+            l = p.send(prop.to_sym).to_s.length
+          rescue
+            l = 'X'.length
+          end
         end
-        arr << l
-      rescue
+      else
+        if prop =='name'
+          l = p.send(prop.to_sym).to_s.length
+        else
+          l = 'Busted'.length
+        end
       end
+      arr << l
     end
     return arr
   end
