@@ -2,7 +2,6 @@ class Display
   attr_accessor :players
   def initialize(players)
     @players = players
-    self.draw
   end
 
   def draw

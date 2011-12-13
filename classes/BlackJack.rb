@@ -14,16 +14,14 @@ class BlackJack
   def run
     @dealer.get_ante
     @dealer.deal
-    @display = Display.new(@players)
-    @dealer.prompt_action
-    @dealer.fallout
-    @display.draw
+    @dealer.action_loop @display
   end
 
   def setup(status)
     if status == 1
       @players = self.get_players
       @dealer.players = @players
+      @display = Display.new(@players)
       else
     end
   end

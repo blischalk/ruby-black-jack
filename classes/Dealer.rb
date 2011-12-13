@@ -20,78 +20,90 @@ class Dealer < Player
       end
   end
 
-  def fallout
+  def action_loop(display)
     @players.each do |p|
-      if p.hand.total > 21
-        p.status = false
+      while p.status != false and p.action != 'stay'
+        if p.class == Human
+          display.draw
+          action = human_logic(p) 
+        else
+          action = bot_logic(p)
+        end
+        call_action(p, action)
+        check_bust(p)
+      end
+    end
+    payout(@players)
+    display.draw
+  end
+
+  def payout(players)
+    players.each do |p|
+      if p.class != Dealer
+        if 1 == 1
+          p.cash = p.cash + (p.bet * 2)
+        else
+          p.cash = p.cash - p.bet
+        end
       end
     end
   end
 
-  def prompt_action
-    options = %w{Hit Stay Split Double}
-    @players.each do |p|
-      modify_options(options, p)
-      if p.class == Human
-        puts "What would you like to do?"
-        options.each do |o|
-          number = options.index(o) + 1
-          puts number.to_s + ') ' + o
-        end
-        action = gets.chomp.to_i
-        action -= 1
-        puts "You chose to #{options[action]}"
-        p.action = options[action].downcase
+  def check_bust(player)
+    p = player
+    if p.hand.total > 21
+      p.status = false
+    end
+  end
+
+  def call_action(player, action)
+      self.send(player.action, player)
+  end
+
+  def human_logic(player)
+    p = player
+    actions = %w{Hit Stay Split Double}
+    puts "What would you like to do?"
+    actions.each do |o|
+      number = actions.index(o) + 1
+      puts number.to_s + ') ' + o
+    end
+    action = gets.chomp.to_i
+    action -= 1
+    puts "You chose to #{actions[action]}"
+    action = actions[action].downcase
+    p.action = action
+    return action
+  end
+
+  def bot_logic(player)
+    p = player
+    case p
+    when Dealer, Bot
+      if player.hand.total < 17
+        p.action = 'hit'
+        return 'hit'
+      else
+        p.action = 'stay'
+        return 'stay'
       end
-      parse_action(p)
     end
   end
 
   def hit(player)
-    puts 'hitting'
     player.hand.add_card @stack.pop
   end
 
   def double(player)
-    puts 'doubling'
     player.hand.add_card @stack.pop
     player.doubled = 1
   end
 
   def split(player)
-    puts 'splitting'
   end
 
   def stay(player)
-    puts 'staying'
-  end
-
-  def parse_action(player)
-    if player.class == Human && player.action != nil
-      self.send(player.action, player)
-    else
-      self.action_logic(player)
-    end
-  end
-
-  def action_logic(player)
-    
-    case player
-    when Dealer
-      puts 'Dealer move'
-      if player.hand.total < 17
-        hit(player)
-      else
-        stay(player)
-      end
-    when Bot
-      puts 'Bot Move'
-      if player.hand.total < 17
-        hit(player)
-      else
-        stay(player)
-      end
-    end
+    player.action = 'stay'
   end
   
   def set_pos

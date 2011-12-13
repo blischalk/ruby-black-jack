@@ -1,5 +1,5 @@
 class Player
-  attr_accessor :name, :pos, :hand, :status
+  attr_accessor :name, :pos, :hand, :status, :action
   def initialize
     @name = self.set_name
     @hand = Hand.new
@@ -14,11 +14,10 @@ class Player
 end
 
 class ActivePlayer < Player
-  attr_accessor :bet, :cash, :action
+  attr_accessor :bet, :cash
   def initialize
     @cash = 100
     @bet = 0
-    @action = nil
     super()
   end
 
