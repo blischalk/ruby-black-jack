@@ -1,6 +1,93 @@
 class Dealer < Player
   attr_reader :deck_count, :decks, :stack
-  attr_accessor :players
+  attr_accessor :blackjack
+
+  def run_game
+    get_ante
+    deal
+    action_loop
+  end
+
+  def get_ante
+    puts "Place your bets!"
+    @blackjack.players.each do |p|
+      p.place_bet
+    end
+  end
+
+  def deal
+    @blackjack.players.each do |p|
+      p.hand.add_card @stack.pop 
+    end
+  end
+
+  def action_loop
+    @blackjack.players.each do |p|
+      while p.status != false and p.action != 'stay'
+        if p.class == Human
+          @blackjack.display.draw
+          human_logic(p) 
+        else
+          bot_logic(p)
+        end
+        call_action(p)
+        check_bust(p)
+        set_winners(p)
+      end
+    end
+    payout
+    @blackjack.display.draw
+  end
+
+  def human_logic(player)
+    puts "What would you like to do?"
+    @blackjack.actions.each do |o|
+      number = @blackjack.actions.index(o) + 1
+      puts number.to_s + ') ' + o
+    end
+    action = gets.chomp.to_i - 1
+    puts "You chose to #{@blackjack.actions[action]}"
+    player.action = @blackjack.actions[action].downcase
+  end
+
+  def bot_logic(player)
+    case player
+    when Dealer, Bot
+      if player.hand.total < 17
+        player.action = 'hit'
+      else
+        player.action = 'stay'
+      end
+    end
+  end
+
+  def call_action(player)
+    self.send(player.action, player)
+  end
+
+  def check_bust(player)
+    if player.hand.total > 21
+      player.status = false
+    end
+  end
+
+  def set_winners(player)
+    if player.status != false && player.hand.total > self.hand.total
+      player.status = 'winner'
+    end
+  end
+
+  def payout
+    @blackjack.players.each do |p|
+      if p.class != Dealer
+        if p.status == 'winner'
+          p.cash = p.cash + (p.bet * 2)
+        else
+          p.cash = p.cash - p.bet
+        end
+      end
+    end
+  end
 
   def setup
     @deck_count = Array.new(2) #Array.new(set_deck_count)
@@ -11,83 +98,6 @@ class Dealer < Player
   def modify_options(options, player)
     options.pop
     options.pop
-  end
-
-  def get_ante
-    puts "Place your bets!"
-      @players.each do |p|
-        p.place_bet
-      end
-  end
-
-  def action_loop(display)
-    @players.each do |p|
-      while p.status != false and p.action != 'stay'
-        if p.class == Human
-          display.draw
-          action = human_logic(p) 
-        else
-          action = bot_logic(p)
-        end
-        call_action(p, action)
-        check_bust(p)
-      end
-    end
-    payout(@players)
-    display.draw
-  end
-
-  def payout(players)
-    players.each do |p|
-      if p.class != Dealer
-        if 1 == 1
-          p.cash = p.cash + (p.bet * 2)
-        else
-          p.cash = p.cash - p.bet
-        end
-      end
-    end
-  end
-
-  def check_bust(player)
-    p = player
-    if p.hand.total > 21
-      p.status = false
-    end
-  end
-
-  def call_action(player, action)
-      self.send(player.action, player)
-  end
-
-  def human_logic(player)
-    p = player
-    actions = %w{Hit Stay Split Double}
-    puts "What would you like to do?"
-    actions.each do |o|
-      number = actions.index(o) + 1
-      puts number.to_s + ') ' + o
-    end
-    action = gets.chomp.to_i
-    action -= 1
-    puts "You chose to #{actions[action]}"
-    action = actions[action].downcase
-    p.action = action
-    return action
-  end
-
-  def bot_logic(player)
-    p = player
-    case p
-    when Dealer, Bot
-      if player.hand.total < 17
-        p.action = 'hit'
-        return 'hit'
-      else
-        p.action = 'stay'
-        return 'stay'
-      end
-    end
   end
 
   def hit(player)
@@ -108,16 +118,6 @@ class Dealer < Player
   
   def set_pos
     return 3
-  end
-
-  def deal
-    count = 0
-    while count < 2
-      @players.each do |p|
-        p.hand.add_card @stack.pop 
-      end
-      count += 1
-    end
   end
 
   def set_name

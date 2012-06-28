@@ -81,7 +81,7 @@ class Display
   def get_len(prop)
     arr = []
     @players.each do |p|
-      if p.status == true
+      if p.status != false
         if prop == 'hand'
           s = p.send(prop).hand
           l = s.length

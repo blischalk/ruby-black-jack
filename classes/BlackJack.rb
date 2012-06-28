@@ -1,78 +1,78 @@
 class BlackJack
-  attr_accessor :players, :player, :dealer, :bots
+  attr_accessor :players, :player, :dealer, :bots, :display, :actions
   def initialize
-    greeting #Verified
+    @actions = %w{Hit Stay Split Double}
+    greeting
     # 1 for new game
     # 2 for continued game
-    # verified
-    status = get_status
-    # pass the status into our setup function
-    setup status #verified
-    run
-  end
-
-  def run
-    @dealer.get_ante
-    @dealer.deal
-    @dealer.action_loop @display
-  end
-
-  def setup(status)
-    if status == 1
-      @players = self.get_players
-      @dealer.players = @players
-      @display = Display.new(@players)
-      else
-    end
-  end
-
-
-  def get_bots
-    bots = Array.new()
-    count = 0
-    while count < 2
-      bots << Bot.new
-      count += 1
-    end
-    return bots
-  end
-
-  def get_players
-    @player = Human.new
-    @dealer = Dealer.new
-    @bots = self.get_bots
-
-    ret = []
-    ret << @dealer << @player
-    @bots.each do |b|
-      ret << b
-    end
-    ret.sort! { |a,b| a.pos <=> b.pos}
-    return ret
-  end
-
-  def get_status
-    valid = false
-    puts "1) New Game \n2) Continue"
-    while valid == false
-    action = gets.chomp.to_i
-      case action
-        when 1
-          ret = 1
-          valid = true
-        when 2
-          puts "Continuing a previous game"
-          ret = 2
-          valid = true
-        else
-          puts "Please select either 1 or 2"
-      end
-      return ret
-    end
+    game_init
+    setup
+    @dealer.blackjack = self
+    @dealer.run_game
   end
 
   def greeting
     puts "Welcome to Brett's Blackjack"
+  end
+
+  def game_init
+    valid = false
+    puts "1) New Game \n2) Continue"
+    while valid == false
+      #get user input
+      start_option = gets.chomp.to_i
+
+      #valid input options
+      valid_input = [1,2]
+
+      if valid_input.include? start_option
+        # set an instance variable of the option the user selected
+        @start_option = start_option
+
+        # break out of the loop
+        valid = true
+      end
+
+      if start_option == 2
+        puts "Continuing a previous game"
+      end
+
+      unless valid_input.include? start_option
+        puts "Please select either 1 or 2"
+      end
+    end
+  end
+
+  def setup
+    if @start_option == 1
+      get_players
+      get_display
+    end
+  end
+
+  def get_players
+    @players = []
+    @player = Human.new
+    @dealer = Dealer.new
+
+    get_bots
+
+    @players << @dealer << @player
+    @bots.each do |b|
+      @players << b
+    end
+    @players.sort! { |a,b| a.pos <=> b.pos}
+  end
+
+  def get_display
+    @display = Display.new(@players)
+  end
+
+  def get_bots
+    @bots = Array.new()
+    2.times do
+      @bots << Bot.new
+    end
   end
 end
 
