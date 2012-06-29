@@ -34,8 +34,7 @@ class DisplayParser
   end
 
   def self.check_status(p)
-    return true if p.status == true
-    return false if p.status == false
+    p.status != :loser || false
   end
 end
 

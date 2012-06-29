@@ -1,4 +1,4 @@
-#!/Users/brettlischalk/.rvm/rubies/ruby-1.9.2-p180/bin/ruby
+#!/usr/bin/ruby
 require_relative 'classes/BlackJack'
 require_relative 'classes/Player'
 require_relative 'classes/Dealer'

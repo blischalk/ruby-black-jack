@@ -2,8 +2,7 @@ class Hand
   attr_accessor :cards, :total
 
   def initialize
-    @cards = []
-    @total = 0
+    reset  
   end
 
   def hand
@@ -32,6 +31,11 @@ class Hand
       count += 1
     end
     return str
+  end
+
+  def reset
+    @cards = []
+    @total = 0
   end
 
   private

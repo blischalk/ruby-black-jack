@@ -1,60 +1,55 @@
 class Player
-  attr_accessor :name, :pos, :hand, :status, :action
+  attr_accessor :name, :pos, :hand, :status, :action, :cash, :bet
+  
   def initialize
-    @name = self.set_name
     @hand = Hand.new
-    @pos = self.set_pos
-    @status = true
-    self.setup
+    @cash = 100
+    @bet = 0
+    @status = :playing
   end
 
-  def setup
+  def place_bet
   end
-
 end
 
 class ActivePlayer < Player
-  attr_accessor :bet, :cash
-  def initialize
-    @cash = 100
-    @bet = 0
-    super()
-  end
-
   def place_bet
     @bet += 25
     @cash -= 25
   end
-
 end
 
 class Human < ActivePlayer
-  def set_name
-=begin
-      puts "Please enter your name..."
-      name = gets.chomp
-      puts "Thank you #{name}."  
-=end
-      return 'Brett' #name
+  def initialize
+    super
+    set_name
+    set_pos
   end
-  def set_pos
-    return 1
+  def set_name
+    @name = 'Brett' #name
   end
 
+  def set_pos
+    @pos = 1
+  end
 end
 
 class Bot < ActivePlayer
   @@names = ['Tiffany', 'Lucky', 'Manny', 'Nikki', 'Kayla']
   @@pos = [2,4]
+
+  def initialize
+    super
+    set_name
+    set_pos
+  end
+
   def set_pos
-    @@pos.pop
+    @pos = @@pos.pop
   end
 
   def set_name
     @@names = @@names.sort_by {rand}
     @@names.pop
   end
-
-
 end
-

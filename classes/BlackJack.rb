@@ -1,7 +1,6 @@
 class BlackJack
-  attr_accessor :players, :player, :dealer, :bots, :display, :actions
+  attr_accessor :players, :player, :dealer, :bots, :display
   def initialize
-    @actions = %w{Hit Stay Split Double}
     greeting
     # 1 for new game
     # 2 for continued game
@@ -64,15 +63,19 @@ class BlackJack
     @players.sort! { |a,b| a.pos <=> b.pos}
   end
 
-  def get_display
-    @display = Display.new(@players)
-  end
-
   def get_bots
     @bots = Array.new()
     2.times do
       @bots << Bot.new
     end
+  end
+
+  def get_display
+    @display = Display.new(@players)
+  end
+
+  def actions
+    %w{Hit Stay Split Double}
   end
 end
 

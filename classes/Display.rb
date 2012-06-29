@@ -75,13 +75,11 @@ class Display
     puts divider
   end
 
-  
-
   #possible case for polymorphism
   def get_len(prop)
     arr = []
     @players.each do |p|
-      if p.status != false
+      if p.status != :loser
         if prop == 'hand'
           s = p.send(prop).hand
           l = s.length

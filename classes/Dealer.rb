@@ -2,10 +2,33 @@ class Dealer < Player
   attr_reader :deck_count, :decks, :stack
   attr_accessor :blackjack
 
+  def initialize
+    super
+    setup
+  end
+
   def run_game
-    get_ante
-    deal
-    action_loop
+    while @blackjack.players.count >= 2
+      punt_bums
+      reset_status
+      get_ante
+      deal
+      action_loop
+    end
+  end
+
+  def punt_bums
+    @blackjack.players.each do |p|
+      if p.cash < 25 and p.class != Dealer
+        @blackjack.players.delete(p)
+      end
+    end
+  end
+
+  def reset_status
+    @blackjack.players.each do |p|
+      p.status = :playing
+    end
   end
 
   def get_ante
@@ -17,13 +40,19 @@ class Dealer < Player
 
   def deal
     @blackjack.players.each do |p|
-      p.hand.add_card @stack.pop 
+      p.hand.reset
+    end
+    2.times do
+      @blackjack.players.each do |p|
+        p.hand.add_card @stack.pop 
+      end
     end
   end
 
   def action_loop
     @blackjack.players.each do |p|
-      while p.status != false and p.action != 'stay'
+      p.action = ''
+      while p.status == :playing and p.action != :stay
         if p.class == Human
           @blackjack.display.draw
           human_logic(p) 
@@ -32,8 +61,8 @@ class Dealer < Player
         end
         call_action(p)
         check_bust(p)
-        set_winners(p)
       end
+    update_status(p)
     end
     payout
     @blackjack.display.draw
@@ -47,40 +76,42 @@ class Dealer < Player
     end
     action = gets.chomp.to_i - 1
     puts "You chose to #{@blackjack.actions[action]}"
-    player.action = @blackjack.actions[action].downcase
+    player.action = @blackjack.actions[action]
   end
 
   def bot_logic(player)
     case player
     when Dealer, Bot
       if player.hand.total < 17
-        player.action = 'hit'
+        player.action = :hit
       else
-        player.action = 'stay'
+        player.action = :stay
       end
     end
   end
 
   def call_action(player)
-    self.send(player.action, player)
+    self.send(player.action.downcase, player)
   end
 
   def check_bust(player)
     if player.hand.total > 21
-      player.status = false
+      player.status = :loser
     end
   end
 
-  def set_winners(player)
-    if player.status != false && player.hand.total > self.hand.total
-      player.status = 'winner'
+  def update_status(player)
+    if player.status == :playing && player.hand.total > hand.total
+      player.status = :winner
+    elsif player.status == :playing && player.hand.total == hand.total
+      player.status = :push
     end
   end
 
   def payout
     @blackjack.players.each do |p|
       if p.class != Dealer
-        if p.status == 'winner'
+        if p.status == :winner
           p.cash = p.cash + (p.bet * 2)
         else
           p.cash = p.cash - p.bet
@@ -92,7 +123,8 @@ class Dealer < Player
   def setup
     @deck_count = Array.new(2) #Array.new(set_deck_count)
     @stack = get_stack
-    self.shuffle
+    @cash = 0
+    shuffle
   end
 
   def modify_options(options, player)
@@ -113,7 +145,7 @@ class Dealer < Player
   end
 
   def stay(player)
-    player.action = 'stay'
+    player.action = :stay
   end
   
   def set_pos
@@ -153,8 +185,5 @@ class Dealer < Player
   
   def shuffle
     @stack =  @stack.sort_by {rand}
-  end
-
-  def place_bet
   end
 end
