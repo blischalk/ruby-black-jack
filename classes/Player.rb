@@ -35,9 +35,6 @@ class Human < ActivePlayer
 end
 
 class Bot < ActivePlayer
-  @@names = ['Tiffany', 'Lucky', 'Manny', 'Nikki', 'Kayla']
-  @@pos = [2,4]
-
   def initialize
     super
     set_name
@@ -45,11 +42,10 @@ class Bot < ActivePlayer
   end
 
   def set_pos
-    @pos = @@pos.pop
+    @pos = [2,4].pop
   end
 
   def set_name
-    @@names = @@names.sort_by {rand}
-    @@names.pop
+    @name = ['Tiffany', 'Lucky', 'Manny', 'Nikki', 'Kayla'].sort_by {rand}.pop
   end
 end
