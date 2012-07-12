@@ -46,6 +46,6 @@ class Bot < ActivePlayer
   end
 
   def set_name
-    @name = ['Tiffany', 'Lucky', 'Manny', 'Nikki', 'Kayla'].sort_by {rand}.pop
+    @name = ['George', 'Lucky', 'Manny', 'Nikki', 'Carl'].sort_by {rand}.pop
   end
 end
