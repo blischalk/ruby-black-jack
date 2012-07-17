@@ -124,6 +124,8 @@ class Dealer < Player
     @deck_count = Array.new(2) #Array.new(set_deck_count)
     @stack = get_stack
     @cash = 0
+    set_pos
+    set_name
     shuffle
   end
 
@@ -149,11 +151,11 @@ class Dealer < Player
   end
   
   def set_pos
-    return 3
+    @pos = 3
   end
 
   def set_name
-    return 'Dealer'
+    @name = 'Dealer'
   end
 
   def set_deck_count

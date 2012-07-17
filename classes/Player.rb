@@ -35,6 +35,8 @@ class Human < ActivePlayer
 end
 
 class Bot < ActivePlayer
+  @@possible_pos = [2,4]
+
   def initialize
     super
     set_name
@@ -42,7 +44,7 @@ class Bot < ActivePlayer
   end
 
   def set_pos
-    @pos = [2,4].pop
+    @pos =  @@possible_pos.pop
   end
 
   def set_name
